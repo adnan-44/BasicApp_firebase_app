@@ -40,21 +40,26 @@ public class MainActivity extends AppCompatActivity {
         sign_up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // create a new user with email and password
-                auth.createUserWithEmailAndPassword(email_input.getText().toString(), password_input.getText().toString())
-                        .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        // Check whether task is successful or not
-                        if(task.isSuccessful()){
-                            Intent intent = new Intent(MainActivity.this, SuccessfulSignActivity.class);
-                            startActivity(intent);
-                        }
-                        else{
-                            Toast.makeText(MainActivity.this, "Failed to sign-up", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                try{
+                    // create a new user with email and password
+                    auth.createUserWithEmailAndPassword(email_input.getText().toString(), password_input.getText().toString())
+                            .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    // Check whether task is successful or not
+                                    if(task.isSuccessful()){
+                                        Intent intent = new Intent(MainActivity.this, SuccessfulSignActivity.class);
+                                        startActivity(intent);
+                                    }
+                                    else{
+                                        Toast.makeText(MainActivity.this, "Failed to sign-up", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }catch(IllegalArgumentException e){
+                    Toast.makeText(MainActivity.this, "Input fields can't be empty", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }
