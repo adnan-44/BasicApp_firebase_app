@@ -9,6 +9,6 @@ public class SuccessfulSignActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_successfull_sign);
+        setContentView(R.layout.activity_successful_sign);
     }
 }
