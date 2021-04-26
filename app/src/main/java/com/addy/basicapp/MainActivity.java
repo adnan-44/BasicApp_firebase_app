@@ -47,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         // Check whether task is successful or not
                         if(task.isSuccessful()){
-                            Toast.makeText(MainActivity.this, "Signed-up Successfully", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(MainActivity.this, SuccessfulSignActivity.class);
+                            startActivity(intent);
                         }
                         else{
                             Toast.makeText(MainActivity.this, "Failed to sign-up", Toast.LENGTH_SHORT).show();
