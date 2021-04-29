@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText email_input, password_input;
     private Button sign_up;
+    private TextView login_text;
 
     // Firebase Authentication instance
     private FirebaseAuth auth;
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         email_input = findViewById(R.id.email_input);
         password_input = findViewById(R.id.password_input);
         sign_up = findViewById(R.id.sign_up);
+        login_text = findViewById(R.id.login_text);
 
         // get a FirebaseAuth instance to work with firebase
         auth = FirebaseAuth.getInstance();
@@ -60,6 +64,15 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Input fields can't be empty", Toast.LENGTH_SHORT).show();
                 }
 
+            }
+        });
+
+        // Open LoginActivity on click of Login text using intents
+        login_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
             }
         });
     }
