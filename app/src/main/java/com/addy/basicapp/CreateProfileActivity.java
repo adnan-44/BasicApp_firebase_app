@@ -113,6 +113,10 @@ public class CreateProfileActivity extends AppCompatActivity {
                         Toast.makeText(CreateProfileActivity.this, "Failed to Upload :(", Toast.LENGTH_SHORT).show();
                     }
                 });
+
+                // Close current CreateProfileActivity once upload is done by using RESULT_OK as response to intent.
+                setResult(RESULT_OK, getIntent());
+                finish();
             }
         });
     }
