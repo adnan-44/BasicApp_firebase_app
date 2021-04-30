@@ -1,5 +1,6 @@
 package com.addy.basicapp;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,6 +12,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class CreateProfileActivity extends AppCompatActivity {
 
@@ -23,6 +32,10 @@ public class CreateProfileActivity extends AppCompatActivity {
     private Uri imageUri;
     private static final int GALLERY_REQUEST_CODE = 1;
 
+    // Firebase connection stuff
+    private StorageReference storageReference;
+    private FirebaseAuth firebaseAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +47,10 @@ public class CreateProfileActivity extends AppCompatActivity {
         create_profile = findViewById(R.id.create_profile);
         profile_image = findViewById(R.id.profile_image);
 
+        // Firebase stuff reference
+        storageReference = FirebaseStorage.getInstance().getReference();    // reference to firebase storage, here we'll store profile picture
+        firebaseAuth = FirebaseAuth.getInstance();
+
         // Get image from gallery onClick of ImageView (setOnClickListener)
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,6 +58,31 @@ public class CreateProfileActivity extends AppCompatActivity {
                 // Use ACTION_PICK for getting image from default media provider
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(galleryIntent, GALLERY_REQUEST_CODE);        // Need to implement method for response from this media intent
+            }
+        });
+
+        // Set OnClickListener to create_profile button and implement code to upload profile picture to Firebase storage
+        create_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                /* I used getUid method, so that profile picture will be stored in different folder for each user.
+                Folder name will be user unique id, like UID/profile will be the path for image file */
+
+                storageReference.child(firebaseAuth.getUid() + "/profile").putFile(imageUri)        // Image uploaded by ImageUri
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Show successful toast on task get successfully completed
+                        Toast.makeText(CreateProfileActivity.this,"Profile Picture Uploaded",Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Show failed toast if task get failed
+                        Toast.makeText(CreateProfileActivity.this, "Failed to Upload :(", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
