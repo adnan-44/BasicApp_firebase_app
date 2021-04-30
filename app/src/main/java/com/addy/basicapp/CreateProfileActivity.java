@@ -14,12 +14,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.util.HashMap;
 
 public class CreateProfileActivity extends AppCompatActivity {
 
@@ -35,6 +41,7 @@ public class CreateProfileActivity extends AppCompatActivity {
     // Firebase connection stuff
     private StorageReference storageReference;
     private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         // Firebase stuff reference
         storageReference = FirebaseStorage.getInstance().getReference();    // reference to firebase storage, here we'll store profile picture
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
         // Get image from gallery onClick of ImageView (setOnClickListener)
         profile_image.setOnClickListener(new View.OnClickListener() {
@@ -73,8 +81,30 @@ public class CreateProfileActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Show successful toast on task get successfully completed
-                        Toast.makeText(CreateProfileActivity.this,"Profile Picture Uploaded",Toast.LENGTH_SHORT).show();
+
+                        // Create user_info collection and store data inside unique user id(Uid) document as Map object
+                        DocumentReference documentReference = firebaseFirestore.collection("user_info").document(firebaseAuth.getUid());
+
+                        // Use HashMap to store data as key, value pair, String as key and value as Object, then upload this Map object
+                        HashMap<String, Object> userData = new HashMap<>();
+                        userData.put("full_name", full_name_input.getText().toString());
+                        userData.put("phone", phone_input.getText().toString());
+
+                        // Using document reference object set Map Object to it, add onCompleteListener to show result
+                        documentReference.set(userData).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                // Show successful toast on task get successfully completed
+                                Toast.makeText(CreateProfileActivity.this,"Profile Created",Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Show failed toast on task get Failed
+                                Toast.makeText(CreateProfileActivity.this,"Failed To Create Profile",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
