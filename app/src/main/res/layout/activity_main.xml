@@ -8,6 +8,16 @@
     tools:context=".MainActivity"
     android:padding="15dp">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Account"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/email_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <EditText
         android:id="@+id/email_input"
         android:layout_width="match_parent"
@@ -43,9 +53,10 @@
         android:id="@+id/login_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Already signed?, Login"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Already signed? Login here"
+        android:textSize="17sp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up" />
 </androidx.constraintlayout.widget.ConstraintLayout>
