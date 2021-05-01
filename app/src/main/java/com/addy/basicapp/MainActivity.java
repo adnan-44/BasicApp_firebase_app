@@ -1,6 +1,7 @@
 package com.addy.basicapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText email_input, password_input;
     private Button sign_up;
     private TextView login_text;
+    private static final int SS_REQUEST_CODE = 1;       // for SuccessfulActivity
 
     // Firebase Authentication instance
     private FirebaseAuth auth;
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                                     // Check whether task is successful or not
                                     if(task.isSuccessful()){
                                         Intent intent = new Intent(MainActivity.this, SuccessfulSignActivity.class);
-                                        startActivity(intent);
+                                        startActivityForResult(intent, SS_REQUEST_CODE);
                                     }
                                     else{
                                         Toast.makeText(MainActivity.this, "Failed to sign-up", Toast.LENGTH_SHORT).show();
@@ -75,5 +77,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Check whether requestCode is same as we requested for SuccessfulActivity, if same close MainActivity using finish()
+        if(requestCode == SS_REQUEST_CODE && resultCode == RESULT_OK){
+            finish();
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.addy.basicapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -19,6 +20,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText email_input, password_input;
     private Button login;
+    private static final int DASHBOARD_REQUEST_CODE = 1;        // for DashboardActivity
 
     // Firebase Authentication instance
     private FirebaseAuth auth;
@@ -47,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if(task.isSuccessful()){
                                         Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                                        startActivity(intent); 
+                                        startActivityForResult(intent, DASHBOARD_REQUEST_CODE);
                                     }
                                     else{
                                         Toast.makeText(LoginActivity.this, "Failed to login", Toast.LENGTH_SHORT).show();
@@ -59,5 +61,18 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // Set RESULT_OK and finish() recent Activity
+        setResult(RESULT_OK, getIntent());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Check whether requestCode is same as we requested for DashboardActivity, if same close LoginActivity using finish()
+        if(requestCode == DASHBOARD_REQUEST_CODE && resultCode == RESULT_OK){
+            finish();
+        }
     }
 }
