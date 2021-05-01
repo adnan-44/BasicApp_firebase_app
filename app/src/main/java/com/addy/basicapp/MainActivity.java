@@ -77,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Set RESULT_OK to the requested intent
+        setResult(RESULT_OK, getIntent());
     }
 
     @Override
