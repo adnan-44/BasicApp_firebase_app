@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +26,7 @@ import com.google.firebase.storage.StorageReference;
 public class MyProfileActivity extends AppCompatActivity {
 
     // GUI elements
-    private TextView full_name_text, phone_text, email_text;
+    private TextView full_name_text, phone_text, email_text, create_message_text;
     private ImageView profile_image;
 
     //Firebase for authentication and retrieve data from FireStore
@@ -42,6 +43,7 @@ public class MyProfileActivity extends AppCompatActivity {
         full_name_text = findViewById(R.id.full_name_text);
         phone_text = findViewById(R.id.phone_text);
         email_text = findViewById(R.id.email_text);
+        create_message_text = findViewById(R.id.create_message_text);
         profile_image = findViewById(R.id.profile_image);
 
         // Firebase reference to work with it
@@ -55,9 +57,13 @@ public class MyProfileActivity extends AppCompatActivity {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 // Set data to TextView from document snapshot
-                full_name_text.setText(value.getString("full_name"));
-                phone_text.setText(value.getString("phone"));
-                email_text.setText(auth.getCurrentUser().getEmail());       // Get current user email from auth reference
+                if(value.get("full_name") != null && value.get("phone") != null ) {
+                    // Change create_message text visibility to gone, once we have full_name and phone to set
+                    create_message_text.setVisibility(View.GONE);
+                    full_name_text.setText(value.getString("full_name"));
+                    phone_text.setText(value.getString("phone"));
+                    email_text.setText(auth.getCurrentUser().getEmail());       // Get current user email from auth reference
+                }
 
                 // Get DownloadUrl method to get URL and then Use Glide to download and set that in ImageView automatically
                 StorageReference imageRef = storageReference.child(auth.getUid()+"/profile");       // Because we've stored profile image in Uid/profile
