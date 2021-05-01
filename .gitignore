@@ -14,3 +14,7 @@
 .cxx
 local.properties
 google-services.json
+
+# Ignore files inside these folders
+/app/debug
+/app/release
