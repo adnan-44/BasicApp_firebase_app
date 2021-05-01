@@ -5,11 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.TextView;
 
 public class SuccessfulSignActivity extends AppCompatActivity {
-    
-    private Button login_button;
+
+    private TextView login_here_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,10 +17,10 @@ public class SuccessfulSignActivity extends AppCompatActivity {
         setContentView(R.layout.activity_successful_sign);
 
         // Init vars
-        login_button = findViewById(R.id.login);
+        login_here_text = findViewById(R.id.login_here_text);
 
-        // Set onclick listener for button to open LoginActivity
-        login_button.setOnClickListener(new View.OnClickListener() {
+        // Set onclick listener for login_here textView to open LoginActivity
+        login_here_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SuccessfulSignActivity.this, LoginActivity.class);
